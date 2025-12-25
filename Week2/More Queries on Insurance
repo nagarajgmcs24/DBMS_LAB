@@ -1,0 +1,29 @@
+select * 
+from car 
+order by year asc;
+
+select count(report_num) CNT 
+from car c,participated p 
+where c.regnum=p.reg_num and model='Lancher';
+
+select count(distinct driver_id) CNT 
+from participated a, accident b 
+where a.report_num = b.reportnum and b.accidentdate like '%08';
+
+select * 
+from participated
+order by damage_amount desc;
+
+select avg(damage_amount)
+from participated;
+
+delete from participated
+where damage_amount < (select avg(damage_amount) from participated);
+
+select name 
+from person a, participated b 
+where a.driverid = b.driver_id and 
+damage_amount > (select avg(damage_amount) from participated);
+
+select max(damage_amount)
+from participated;
