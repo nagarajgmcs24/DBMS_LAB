@@ -1,0 +1,45 @@
+create table borrower (
+customer_name varchar(10),
+Loan_number int,
+foreign key (customer_name) references bankcustomer(customer_name),
+foreign key (Loan_number) references loan(loan_number)
+);
+insert into borrower values
+("Avinash", 1),
+("Dinesh", 2),
+("Mohan", 3),
+("Nikil", 4),
+("Ravi", 5);
+select * from borrower;
+
+select d.customer_name 
+from depositer d, branch b, bankaccount ba
+where d.accno = ba.accno and ba.branch_name = b.branch_name and b.branchcity = "Delhi"
+group by d.customer_name
+Having count(distinct(B.branch_name)) =
+(select count(branch_name) from branch where branchcity = 'Delhi');
+
+SELECT DISTINCT bo.customer_name
+FROM borrower bo
+WHERE bo.customer_name NOT IN (SELECT customer_name FROM depositer);
+
+select bo.customer_name
+from borrower bo, bankcustomer bc
+where bo.customer_name in (select customer_name from depositer) and 
+bc.customer_city  in (select branchcity from branch where branchcity = "Bengaluru") and
+bc.customer_name = bo.customer_name
+group by bo.customer_name;
+
+select branch_name 
+from branch 
+where assets > all (select assets from branch where branchcity = "Bengaluru");
+
+DELETE FROM bankaccount
+WHERE branch_name IN (
+SELECT branch_name FROM branch WHERE branchcity = 'Bombay');
+select * from bankaccount;
+
+update bankaccount
+set balance =  balance * 0.05
+where balance;
+select * from bankaccount;
