@@ -1,0 +1,92 @@
+create database insurance;
+use insurance;
+
+create table person(
+driverid varchar(10) primary key,
+name varchar(50),
+address varchar(100)
+);
+insert into person
+values
+("A01", "Richard", "Srinvasnagar"),
+("A02", "Pradeep", "Rajaji nagar"),
+("A03", "Smith", "Ashok nagar"),
+("A04", "Venu", "N R Colony"),
+("A05", "Jhon", "Humanth nagar");
+
+select * from person;
+create table car(
+regnum varchar(20) primary key,
+model varchar(40),
+year int
+);
+insert into car
+values
+("KA052250", "Indica", 1990),
+("KA031181", "Lancher", 1957),
+("KA095477", "Toyota", 1998),
+("KA053408", "Honda", 2008),
+("KA041702", "Audi", 2005);
+select * from car;
+
+create table accident(
+reportnum int primary key,
+accidentdate varchar(10),
+location varchar(40)
+);
+insert into accident
+values
+(11, "01-Jan-03", "Mysore Road"),
+(12, "02-Feb-04", "Sound End Circle"),
+(13, "21-Jan-03", "Bull temple Road"),
+(14, "17-Feb-08", "Mysore Road"),
+(15, "04-Mar-05", "Kanakapura Road");
+select * from accident;
+
+create table owns(
+driver_id varchar(10),
+reg_num varchar(40),
+foreign key (driver_id) references person(driverid),
+foreign key (reg_num) references car(regnum)
+);
+insert into owns
+values
+("A01", "KA052250"),
+("A02", "KA053408"),
+("A03", "KA031181"),
+("A04", "KA095477"),
+("A05", "KA041702");
+select * from owns;
+
+create table participated (    
+driver_id varchar(10),     
+reg_num varchar(15),     
+report_num int,     
+damage_amount int,     
+foreign key (driver_id) references person(driverid),     
+foreign key (reg_num) references car(regnum),     
+foreign key (report_num) references accident(reportnum) 
+);
+insert into participated
+values
+("A01", "KA052250", 11, 10000),
+("A02", "KA053408", 12, 50000),
+("A03", "KA031181", 13, 25000),
+("A04", "KA095477", 14, 3000),
+("A05", "KA041702", 15, 5000);
+select * from participated;
+
+update participated
+set damage_amount = 25000
+where reg_num = "KA053408" and report_num = 12;
+
+select accidentdate, location
+from accident;
+
+select * from participated;
+insert into accident (reportnum, accidentdate, location)
+values (16,"02-feb-08","Domlur");
+
+select driver_id
+from participated
+where damage_amount >= 25000;
