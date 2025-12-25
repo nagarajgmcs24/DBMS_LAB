@@ -1,0 +1,87 @@
+create database company;
+use company;
+
+create table dept (
+dept_no int primary key,
+dname varchar(20),
+dloc varchar(10)
+);
+insert into dept values
+(101, "marketing", "Bengaluru"),
+(102, "designing", "Mysuru"),
+(103, "sales", "Hyderabad"),
+(104, "Finance;", "Mumbai"),
+(105, "Customer service", "Chennai");
+select * from dept;
+
+create table employee(
+empno int primary key,
+ename varchar(20),
+mgr_no int,
+hireddate date,
+sal float,
+deptno int,
+foreign key (deptno) references dept(dept_no)
+);
+insert into employee values
+(101, "Prakash", 202, "2024-12-12", 45000, 105),
+(102, "Pradeep", 203, "2024-12-12", 50000, 103),
+(103, "suraj", 201, "2024-08-30", 30000, 102),
+(104, "suman", 209, "2024-07-23", 55000, 101),
+(105, "avinash", 300, "2024-06-20", 35000, 104);
+select * from employee;
+
+create table project(
+pno int primary key, 
+ploc varchar(10) , 
+pname varchar(10));
+insert into project 
+values
+(505,"Bengaluru","aaa"),
+(504,"Hyderabad","bbb"),
+(503,"Mysuru","ccc"),
+(502,"Mumbai","ddd"),
+(501,"Chennai","eee");
+select * from project;
+
+create table assignedto(
+empno int, 
+pno int,
+foreign key(empno) references employee(empno) ,
+foreign key(pno) references project(pno),
+jobrole varchar(10));
+insert into assignedto
+values
+(101,504,"zzz"),
+(102,503,"yyy"),
+(103,501,"xxx"),
+(104,505,"uuu"),
+(105,502,"vvv");
+select * from assignedto;
+
+create table incentives(
+empno int,
+incentivedate date,
+incentiveamount float,
+foreign key (empno) references employee(empno));
+INSERT INTO INCENTIVES 
+VALUES
+(101, '2025-01-15', 5000.00),
+(103, '2025-03-05', 4500.00),
+(105, '2025-05-10', 6000.00);
+select * from incentives;
+
+SELECT DISTINCT empno
+FROM assignedto
+JOIN project ON assignedto.pno = project.pno
+WHERE project.ploc IN ('Bengaluru', 'Mysuru', 'Hyderabad');
+
+SELECT EMPLOYEE.EMPNO 
+FROM EMPLOYEE 
+LEFT JOIN INCENTIVES 
+ON EMPLOYEE.EMPNO = INCENTIVES.EMPNO 
+WHERE incentives.empno IS NULL 
+
+select e.empno, e.ename, d.dname, a.jobrole, d.dloc, p.ploc 
+from employee e, dept d, assignedto a, project p 
+where p.ploc = d.dloc and d.dept_no = e.deptno and a.empno = e.empno order by e.empno; 
